@@ -1,0 +1,42 @@
+#include <SoftwareSerial.h>
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+SoftwareSerial mySerial(10, 11);
+float percentage;
+int raw;
+void setup()
+{
+  mySerial.begin(115200); 
+  lcd.init();
+  lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print("Air Quality");
+  lcd.setCursor(0, 1);
+  lcd.print("Monitoring System");
+  delay(2000);
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("MQ135 sensor");
+  lcd.setCursor(0, 1);
+  lcd.print("is getting warm...");
+  for (int i = 0; i < 3; i++)
+  {
+    delay(20000);
+    delay(20000);
+    delay(20000);
+  }
+}
+
+void loop()
+{
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Air Pollution(%)");
+  lcd.setCursor(0, 1);
+  raw = analogRead(A0);
+  percentage = map(raw, 0, 1024, 1, 100);
+  lcd.print(percentage);
+  lcd.print(" %");
+  mySerial.println(percentage); 
+  delay(5000);
+}
